@@ -1,0 +1,20 @@
+{
+  "name": "Ditto - Beauty & Wellness",
+  "short_name": "Ditto",
+  "description": "Discover and book top salons, spas, and wellness services near you",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#E85A5A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "health", "beauty"],
+  "screenshots": []
+}

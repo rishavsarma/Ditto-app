@@ -19,8 +19,8 @@ export const stores: Store[] = [
     city: "Bangalore",
     categories: ["Beauty", "Salon"],
     offerPercent: 20,
-    heroImage: "/images/store-hero.jpg",
-    logo: "/bblunt.jpg",
+    heroImage: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80",
+    logo: "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=200&h=200&fit=crop&q=80",
   },
   {
     slug: "ylg-salon",
@@ -30,8 +30,8 @@ export const stores: Store[] = [
     city: "Bangalore",
     categories: ["Beauty", "Salon"],
     offerPercent: 25,
-    heroImage: "/images/hero-salon-1.jpg",
-    logo: "/ylg.jpg",
+    heroImage: "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=800&q=80",
+    logo: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&h=200&fit=crop&q=80",
   },
   {
     slug: "enrich",
@@ -41,8 +41,8 @@ export const stores: Store[] = [
     city: "Bangalore",
     categories: ["Beauty", "Salon"],
     offerPercent: 15,
-    heroImage: "/images/hero-salon-1.jpg",
-    logo: "/enrich.jpg",
+    heroImage: "https://images.unsplash.com/photo-1559599101-f09722fb4948?w=800&q=80",
+    logo: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=200&h=200&fit=crop&q=80",
   },
   {
     slug: "bodycraft",
@@ -52,8 +52,8 @@ export const stores: Store[] = [
     city: "Bangalore",
     categories: ["Beauty", "Salon"],
     offerPercent: 20,
-    heroImage: "/images/hero-salon-1.jpg",
-    logo: "/bodycraft.jpg",
+    heroImage: "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80",
+    logo: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=200&h=200&fit=crop&q=80",
   },
 ]
 
