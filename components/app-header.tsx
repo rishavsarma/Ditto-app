@@ -65,7 +65,7 @@ export function AppHeader({ activeTab = "FOR YOU" }: AppHeaderProps) {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-1 px-4 -mb-px overflow-x-auto no-scrollbar">
+      {/* <div className="flex items-center gap-1 px-4 -mb-px overflow-x-auto no-scrollbar">
         {tabs.map((tab) => (
           <Link
             key={tab.id}
@@ -80,7 +80,7 @@ export function AppHeader({ activeTab = "FOR YOU" }: AppHeaderProps) {
             {tab.label}
           </Link>
         ))}
-      </div>
+      </div> */}
     </div>
   )
 }

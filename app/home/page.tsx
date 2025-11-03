@@ -1,12 +1,11 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { stores } from "@/lib/data"
-import { AppHeader } from "@/components/app-header"
+import Link from "next/link";
+import Image from "next/image";
+import { stores } from "@/lib/data";
+import { AppHeader } from "@/components/app-header";
 
 export default function Home() {
-
   const spotlights = [
     {
       id: "sp1",
@@ -32,19 +31,40 @@ export default function Home() {
       img: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=1000&fit=crop",
       type: "offer",
     },
-  ]
+  ];
 
   const categories = [
-    { name: "Haircut", emoji: "💇‍♀️", link: "/stores" },
-    { name: "Hair Color", emoji: "🎨", link: "/stores" },
-    { name: "Spa", emoji: "�", link: "/stores" },
-    { name: "Facial", emoji: "✨", link: "/stores" },
-    { name: "Manicure", emoji: "💅", link: "/stores" },
-    { name: "Pedicure", emoji: "🦶", link: "/stores" },
-    { name: "Waxing", emoji: "🪒", link: "/stores" },
-    { name: "Makeup", emoji: "💄", link: "/stores" },
-    { name: "Massage", emoji: "🧘", link: "/stores" },
-  ]
+    { 
+      name: "Premium salons", 
+      img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=400&fit=crop",
+      link: "/stores" 
+    },
+    { 
+      name: "Bridal makeup", 
+      img: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&h=400&fit=crop",
+      link: "/stores" 
+    },
+    { 
+      name: "Luxury spas", 
+      img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&h=400&fit=crop",
+      link: "/stores" 
+    },
+    { 
+      name: "Hair coloring", 
+      img: "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400&h=400&fit=crop",
+      link: "/stores" 
+    },
+    { 
+      name: "Massage therapy", 
+      img: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&h=400&fit=crop",
+      link: "/stores" 
+    },
+    { 
+      name: "Nail art", 
+      img: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop",
+      link: "/stores" 
+    },
+  ];
 
   const festiveGroups = [
     {
@@ -59,7 +79,7 @@ export default function Home() {
       subtitle: "Highly recommended",
       stores: stores.slice(0, 4),
     },
-  ]
+  ];
 
   return (
     <main className="min-h-screen bg-background pb-20">
@@ -68,13 +88,50 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="px-0 py-6">
-        {/* Spotlight Section */}
+        {/* Exclusive Offers */}
         <div className="mb-8">
           <div className="flex items-center justify-between px-4 mb-4">
-            <h2 className="text-xl font-bold tracking-tight">IN THE SPOTLIGHT</h2>
+            <h2 className="text-lg font-bold">Exclusive Offers</h2>
           </div>
-          
-          <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pl-4 pb-2" style={{ scrollPaddingLeft: '1rem' }}>
+
+          <div
+            className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pl-4 pb-2"
+            style={{ scrollPaddingLeft: "1rem" }}
+          >
+            {[1, 2, 3].map((n) => (
+              <div
+                key={n}
+                className="min-w-[320px] snap-start rounded-xl border border-border bg-gradient-to-br from-primary/10 to-primary/5 p-6"
+              >
+                <div className="text-xs text-primary font-semibold mb-2">
+                  LIMITED TIME
+                </div>
+                <h3 className="text-lg font-bold mb-2">
+                  Flat {20 + n * 5}% OFF
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  On premium salon services
+                </p>
+                <button className="btn-primary w-full text-sm py-2">
+                  Claim Offer
+                </button>
+              </div>
+            ))}
+            <div className="w-4 shrink-0" />
+          </div>
+        </div>
+        {/* Spotlight Section */}
+        {/* <div className="mb-8">
+          <div className="flex items-center justify-between px-4 mb-4">
+            <h2 className="text-xl font-bold tracking-tight">
+              IN THE SPOTLIGHT
+            </h2>
+          </div>
+
+          <div
+            className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pl-4 pb-2"
+            style={{ scrollPaddingLeft: "1rem" }}
+          >
             {spotlights.map((item) => (
               <Link
                 key={item.id}
@@ -89,32 +146,58 @@ export default function Home() {
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  
-                  {/* Mute Icon */}
+
+        
                   <button className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    <svg
+                      className="w-5 h-5 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"
+                      />
                     </svg>
                   </button>
 
-                  {/* Content */}
+         
                   <div className="absolute bottom-0 left-0 right-0 p-5">
                     <div className="text-white">
                       <div className="text-xs mb-2 opacity-90">{item.meta}</div>
-                      <h3 className="text-xl font-bold mb-1 line-clamp-2">{item.title}</h3>
+                      <h3 className="text-xl font-bold mb-1 line-clamp-2">
+                        {item.title}
+                      </h3>
                       <div className="text-sm opacity-80">{item.location}</div>
                     </div>
-                    
-                    {/* Bookmark */}
+
+              
                     <button className="absolute bottom-5 right-5 w-10 h-10 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                      <svg
+                        className="w-5 h-5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                        />
                       </svg>
                     </button>
                   </div>
 
-                  {/* Dots Indicator */}
                   <div className="absolute bottom-24 left-0 right-0 flex justify-center gap-1.5">
                     {spotlights.map((_, idx) => (
                       <div
@@ -132,20 +215,34 @@ export default function Home() {
             ))}
             <div className="w-4 shrink-0" />
           </div>
-        </div>
+        </div> */}
 
         {/* Quick Categories */}
-        <div className="mb-8 px-4">
-          <h2 className="text-lg font-bold mb-4">Beauty Services</h2>
-          <div className="grid grid-cols-3 gap-3">
+        <div className="mb-8">
+          <div className="flex items-center justify-between px-4 mb-4">
+            <h2 className="text-xl font-bold">IN THE MOOD FOR</h2>
+          </div>
+          <div 
+            className="grid grid-cols-2 gap-3 px-4"
+          >
             {categories.map((cat) => (
               <Link
                 key={cat.name}
                 href={cat.link}
-                className="flex flex-col items-center justify-center p-4 rounded-xl bg-muted/50 hover:bg-muted border border-border transition-all hover:scale-105 active:scale-95"
+                className="relative aspect-[4/3] rounded-2xl overflow-hidden group"
               >
-                <span className="text-3xl mb-2">{cat.emoji}</span>
-                <span className="text-xs font-medium text-center">{cat.name}</span>
+                <Image
+                  src={cat.img}
+                  alt={cat.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <h3 className="text-white font-bold text-lg">
+                    {cat.name}
+                  </h3>
+                </div>
               </Link>
             ))}
           </div>
@@ -159,8 +256,11 @@ export default function Home() {
               View all →
             </Link>
           </div>
-          
-          <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pl-4 pb-2" style={{ scrollPaddingLeft: '1rem' }}>
+
+          <div
+            className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pl-4 pb-2"
+            style={{ scrollPaddingLeft: "1rem" }}
+          >
             {stores.map((store) => (
               <Link
                 key={store.slug}
@@ -190,8 +290,12 @@ export default function Home() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-sm truncate">{store.name}</h3>
-                        <p className="text-xs text-muted-foreground">{store.area}</p>
+                        <h3 className="font-semibold text-sm truncate">
+                          {store.name}
+                        </h3>
+                        <p className="text-xs text-muted-foreground">
+                          {store.area}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -215,7 +319,7 @@ export default function Home() {
               View all →
             </Link>
           </div>
-          
+
           <div className="space-y-3">
             {stores.slice(0, 3).map((store) => (
               <Link
@@ -251,33 +355,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-
-        {/* Exclusive Offers */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between px-4 mb-4">
-            <h2 className="text-lg font-bold">Exclusive Offers</h2>
-          </div>
-          
-          <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pl-4 pb-2" style={{ scrollPaddingLeft: '1rem' }}>
-            {[1, 2, 3].map((n) => (
-              <div
-                key={n}
-                className="min-w-[320px] snap-start rounded-xl border border-border bg-gradient-to-br from-primary/10 to-primary/5 p-6"
-              >
-                <div className="text-xs text-primary font-semibold mb-2">LIMITED TIME</div>
-                <h3 className="text-lg font-bold mb-2">Flat {20 + n * 5}% OFF</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  On premium salon services
-                </p>
-                <button className="btn-primary w-full text-sm py-2">
-                  Claim Offer
-                </button>
-              </div>
-            ))}
-            <div className="w-4 shrink-0" />
-          </div>
-        </div>
       </div>
     </main>
-  )
+  );
 }

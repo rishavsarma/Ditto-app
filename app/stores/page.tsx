@@ -5,8 +5,10 @@ import { stores } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function StoresList() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
 
@@ -25,8 +27,21 @@ export default function StoresList() {
       {/* Header */}
       <AppHeader activeTab="STORES" />
 
+      {/* Back Button */}
+      <div className="px-4 pt-4 pb-2">
+        <button
+          onClick={() => router.push('/home')}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          <span className="text-sm font-medium">Back to Home</span>
+        </button>
+      </div>
+
       {/* Filter Tabs */}
-      <div className="px-4 pt-4 pb-3">
+      <div className="px-4 pt-2 pb-3">
         <div className="flex gap-2 overflow-x-auto no-scrollbar">
           {filters.map((filter) => (
             <button
@@ -75,7 +90,7 @@ export default function StoresList() {
         </div>
       </div>
       {/* Featured Salons Section */}
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <div className="flex items-center justify-between mb-3 px-4">
           <h2 className="text-lg font-bold">Featured Salons</h2>
           <span className="text-sm text-muted-foreground">
@@ -138,7 +153,7 @@ export default function StoresList() {
           ))}
           <div className="w-4 shrink-0" />
         </div>
-      </div>
+      </div> */}
       <div className="px-4 py-6">
         {/* <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
@@ -180,57 +195,63 @@ export default function StoresList() {
           </div>
 
           {filteredStores.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {filteredStores.map((store) => (
                 <Link
                   key={store.slug}
                   href={`/stores/${store.slug}`}
-                  className="flex gap-3 p-3 rounded-xl border border-border bg-card hover:shadow-md transition-all"
+                  className="block rounded-2xl overflow-hidden bg-card border border-border hover:shadow-lg transition-all"
                 >
-                  <div className="relative w-24 h-24 rounded-lg overflow-hidden shrink-0">
+                  {/* Hero Image */}
+                  <div className="relative h-40 w-full">
                     <Image
                       src={store.heroImage}
                       alt={store.name}
                       fill
                       className="object-cover"
                     />
-                    <div className="absolute top-1 right-1 bg-primary text-white px-2 py-0.5 rounded text-xs font-bold">
-                      {store.offerPercent}%
+                    {/* Pagination dots */}
+                    <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-white/40"></div>
                     </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-1">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-sm mb-0.5">
-                          {store.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground mb-1">
-                          {store.area}, {store.city}
-                        </p>
+                  
+                  {/* Offer Badge */}
+                  <div className="bg-primary/90 px-4 py-2 flex items-center gap-2">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span className="text-white text-sm font-semibold">
+                      Flat {store.offerPercent}% OFF
+                    </span>
+                  </div>
+
+                  {/* Store Info */}
+                  <div className="p-4 bg-card">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg mb-1">{store.name}</h3>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                          <span className="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold inline-flex items-center gap-1">
+                            4.4 ★
+                          </span>
+                          <span>{store.categories[0]}</span>
+                          <span>•</span>
+                          <span>₹1300 for two</span>
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {store.distanceKm} km • {store.area}, {store.city}
+                        </div>
                       </div>
-                      <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-border shrink-0 ml-2">
-                        <Image
-                          src={store.logo}
-                          alt={store.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-                      <span>📍 {store.distanceKm} km</span>
-                      <span>•</span>
-                      <span>⭐ 4.5 (120)</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      {store.categories.map((cat) => (
-                        <span
-                          key={cat}
-                          className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded"
-                        >
-                          {cat}
-                        </span>
-                      ))}
+                      
+                      {/* Bookmark Icon */}
+                      <button className="p-2 rounded-lg border border-border hover:bg-muted transition-colors">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                 </Link>
