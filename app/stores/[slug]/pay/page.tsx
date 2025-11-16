@@ -3,6 +3,7 @@
 import { useState, use } from "react"
 import { notFound, useRouter } from "next/navigation"
 import { stores } from "@/lib/data"
+import { AppHeader } from "@/components/app-header"
 
 type Offer = {
   id: string
@@ -40,17 +41,7 @@ export default function EnterAmount({ params }: { params: Promise<{ slug: string
   return (
     <main className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <div className="px-4 py-4 border-b border-border">
-        <button 
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span className="text-sm font-medium">Back</span>
-        </button>
-      </div>
+      <AppHeader variant="back" title="Bill Pay" />
 
       {/* Content */}
       <div className="flex-1 px-4 py-6">

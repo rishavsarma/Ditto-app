@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const tabs = [
   { name: "For You", href: "/" },
@@ -10,22 +11,22 @@ const tabs = [
 
 export function NavTabs() {
   const pathname = usePathname()
+  const activeTab = pathname === "/" ? "/" : "/stores"
+  
   return (
-    <nav className="mt-5 grid grid-cols-2 gap-2">
-      {tabs.map((t) => {
-        const active = t.href === "/" ? pathname === "/" : pathname.startsWith("/stores")
-        return (
-          <Link
-            key={t.name}
-            href={t.href}
-            className={`rounded-xl py-2 text-center text-sm ${
-              active ? "bg-(--surface-elev) text-[color:var(--brand)]" : "text-muted-foreground"
-            }`}
-          >
-            {t.name}
+    <Tabs value={activeTab} className="mt-5 w-full">
+      <TabsList className="grid w-full grid-cols-2 h-11">
+        {tabs.map((t) => (
+          <Link key={t.name} href={t.href} className="contents">
+            <TabsTrigger 
+              value={t.href} 
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
+              {t.name}
+            </TabsTrigger>
           </Link>
-        )
-      })}
-    </nav>
+        ))}
+      </TabsList>
+    </Tabs>
   )
 }

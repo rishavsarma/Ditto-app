@@ -7,6 +7,7 @@ export type Store = {
   categories: string[]
   offerPercent: number
   heroImage: string
+  images: string[]
   logo: string
 }
 
@@ -20,6 +21,11 @@ export const stores: Store[] = [
     categories: ["Beauty", "Salon"],
     offerPercent: 20,
     heroImage: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80",
+      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80",
+      "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800&q=80",
+    ],
     logo: "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=200&h=200&fit=crop&q=80",
   },
   {
@@ -31,6 +37,11 @@ export const stores: Store[] = [
     categories: ["Beauty", "Salon"],
     offerPercent: 25,
     heroImage: "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=800&q=80",
+      "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800&q=80",
+      "https://images.unsplash.com/photo-1559599101-f09722fb4948?w=800&q=80",
+    ],
     logo: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&h=200&fit=crop&q=80",
   },
   {
@@ -42,6 +53,11 @@ export const stores: Store[] = [
     categories: ["Beauty", "Salon"],
     offerPercent: 15,
     heroImage: "https://images.unsplash.com/photo-1559599101-f09722fb4948?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1559599101-f09722fb4948?w=800&q=80",
+      "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80",
+      "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80",
+    ],
     logo: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=200&h=200&fit=crop&q=80",
   },
   {
@@ -53,6 +69,11 @@ export const stores: Store[] = [
     categories: ["Beauty", "Salon"],
     offerPercent: 20,
     heroImage: "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80",
+      "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=800&q=80",
+      "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800&q=80",
+    ],
     logo: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=200&h=200&fit=crop&q=80",
   },
 ]

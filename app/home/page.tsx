@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { stores } from "@/lib/data";
 import { AppHeader } from "@/components/app-header";
+import { ExclusiveOfferCard } from "@/components/exclusive-offer-card";
 
 export default function Home() {
   const spotlights = [
@@ -82,16 +83,19 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-background pb-20">
+    <main className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20 pb-20">
       {/* Header */}
-      <AppHeader activeTab="FOR YOU" />
+      <AppHeader variant="main" showSearch={true} />
 
       {/* Main Content */}
-      <div className="px-0 py-6">
+      <div className="px-0 py-8">
         {/* Exclusive Offers */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between px-4 mb-4">
-            <h2 className="text-lg font-bold">Exclusive Offers</h2>
+        <div className="mb-10">
+          <div className="flex items-center justify-between px-4 mb-5">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight">Exclusive Offers</h2>
+              <p className="text-xs text-muted-foreground mt-1">Limited time deals</p>
+            </div>
           </div>
 
           <div
@@ -99,23 +103,7 @@ export default function Home() {
             style={{ scrollPaddingLeft: "1rem" }}
           >
             {[1, 2, 3].map((n) => (
-              <div
-                key={n}
-                className="min-w-[320px] snap-start rounded-xl border border-border bg-gradient-to-br from-primary/10 to-primary/5 p-6"
-              >
-                <div className="text-xs text-primary font-semibold mb-2">
-                  LIMITED TIME
-                </div>
-                <h3 className="text-lg font-bold mb-2">
-                  Flat {20 + n * 5}% OFF
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  On premium salon services
-                </p>
-                <button className="btn-primary w-full text-sm py-2">
-                  Claim Offer
-                </button>
-              </div>
+              <ExclusiveOfferCard key={n} discount={20 + n * 5} />
             ))}
             <div className="w-4 shrink-0" />
           </div>
@@ -218,90 +206,97 @@ export default function Home() {
         </div> */}
 
         {/* Quick Categories */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between px-4 mb-4">
-            <h2 className="text-xl font-bold">IN THE MOOD FOR</h2>
+        <div className="mb-10">
+          <div className="flex items-center justify-between px-4 mb-5">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight">What's on your mind?</h2>
+              <p className="text-xs text-muted-foreground mt-1">Explore services</p>
+            </div>
           </div>
           <div 
-            className="grid grid-cols-2 gap-3 px-4"
+            className="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory pl-4 pb-2"
+            style={{ scrollPaddingLeft: "1rem" }}
           >
             {categories.map((cat) => (
               <Link
                 key={cat.name}
                 href={cat.link}
-                className="relative aspect-[4/3] rounded-2xl overflow-hidden group"
+                className="relative min-w-[160px] aspect-[4/3] rounded-2xl overflow-hidden group snap-start shadow-md hover:shadow-xl transition-all"
               >
                 <Image
                   src={cat.img}
                   alt={cat.name}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white font-bold text-lg">
+                  <h3 className="text-white font-bold text-sm drop-shadow-lg">
                     {cat.name}
                   </h3>
                 </div>
               </Link>
             ))}
+            <div className="w-4 shrink-0" />
           </div>
         </div>
 
         {/* Premium Salons */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between px-4 mb-4">
-            <h2 className="text-lg font-bold">Premium Salons Near You</h2>
-            <Link href="/stores" className="text-sm text-primary font-medium">
+        <div className="mb-10">
+          <div className="flex items-center justify-between px-4 mb-5">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight">Premium Salons Near You</h2>
+              <p className="text-xs text-muted-foreground mt-1">Handpicked for you</p>
+            </div>
+            <Link href="/stores" className="text-sm text-primary font-semibold hover:underline">
               View all →
             </Link>
           </div>
 
           <div
-            className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pl-4 pb-2"
+            className="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory pl-4 pb-2"
             style={{ scrollPaddingLeft: "1rem" }}
           >
-            {stores.map((store) => (
+            {stores.map((store, idx) => (
               <Link
                 key={store.slug}
                 href={`/stores/${store.slug}`}
-                className="min-w-[280px] snap-start"
+                className="min-w-[240px] snap-start group"
               >
-                <div className="rounded-xl border border-border bg-card overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="relative h-40">
+                <div className="rounded-2xl overflow-hidden bg-card hover:shadow-2xl transition-all border border-border/50 shadow-md">
+                  <div className="relative h-32">
                     <Image
                       src={store.heroImage}
                       alt={store.name}
                       fill
-                      className="object-cover"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded-md text-xs font-bold">
-                      {store.offerPercent}% OFF
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    <div className="absolute top-2 right-2 bg-green-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold shadow-lg flex items-center gap-1">
+                      <span>⭐</span>
+                      <span>{idx % 3 === 0 ? '4.0' : idx % 3 === 1 ? '4.5' : '4.1'}</span>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <div className="flex items-start gap-3 mb-2">
-                      <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-border shrink-0">
-                        <Image
-                          src={store.logo}
-                          alt={store.name}
-                          fill
-                          className="object-cover"
-                        />
+                  <div className="p-3.5">
+                    <h3 className="font-bold text-sm mb-1.5 truncate">
+                      {store.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mb-2.5 truncate">
+                      {store.area}, {store.city}
+                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <div className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-primary/10 border border-primary/20">
+                        <span className="text-primary text-xs font-bold">
+                          {store.offerPercent}% Off
+                        </span>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-sm truncate">
-                          {store.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground">
-                          {store.area}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>📍 {store.distanceKm} km</span>
-                      <span>•</span>
-                      <span>⭐ 4.5</span>
+                      {/* {idx % 2 === 0 && (
+                        <div className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-orange-500/10 border border-orange-500/20">
+                          <span className="text-orange-600 text-xs font-bold">
+                            +25% Off
+                          </span>
+                        </div>
+                      )} */}
                     </div>
                   </div>
                 </div>
@@ -313,42 +308,54 @@ export default function Home() {
 
         {/* Top Picks */}
         <div className="mb-8 px-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold">Top Picks for You</h2>
-            <Link href="/stores" className="text-sm text-primary font-medium">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight">Top Picks for You</h2>
+              <p className="text-xs text-muted-foreground mt-1">Based on your preferences</p>
+            </div>
+            <Link href="/stores" className="text-sm text-primary font-semibold hover:underline">
               View all →
             </Link>
           </div>
 
           <div className="space-y-3">
-            {stores.slice(0, 3).map((store) => (
+            {stores.slice(0, 3).map((store, idx) => (
               <Link
                 key={store.slug}
                 href={`/stores/${store.slug}`}
-                className="flex gap-3 p-3 rounded-xl border border-border bg-card hover:shadow-md transition-all"
+                className="flex gap-0 rounded-2xl bg-card hover:shadow-xl transition-all shadow-md group overflow-hidden border border-border/50"
               >
-                <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0">
+                <div className="relative w-28 shrink-0">
                   <Image
                     src={store.heroImage}
                     alt={store.name}
                     fill
-                    className="object-cover"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-2xl"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between mb-1">
-                    <h3 className="font-semibold text-sm">{store.name}</h3>
-                    <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">
-                      {store.offerPercent}% OFF
-                    </span>
+                <div className="flex-1 min-w-0 p-3">
+                  <div className="flex items-start justify-between mb-1.5">
+                    <h3 className="font-bold text-sm flex-1">{store.name}</h3>
+                    <div className="bg-green-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold ml-2 shadow-md flex items-center gap-1">
+                      <span>⭐</span>
+                      <span>{idx === 0 ? '4.1' : '4.0'}</span>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground mb-2">
+                  <p className="text-xs text-muted-foreground mb-3">
                     {store.area}, {store.city}
                   </p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>📍 {store.distanceKm} km</span>
-                    <span>•</span>
-                    <span>⭐ 4.5 (120 reviews)</span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-primary/10 border border-primary/20">
+                      <span className="text-primary text-xs font-bold">
+                        {idx === 0 ? '15% Off' : '10% Off'}
+                      </span>
+                    </div>
+                    {/* <div className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-orange-500/10 border border-orange-500/20">
+                      <span className="text-orange-600 text-xs font-bold">
+                        +25% Off
+                      </span>
+                    </div> */}
                   </div>
                 </div>
               </Link>

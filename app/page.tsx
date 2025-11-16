@@ -1,8 +1,14 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 
 export default function Page() {
   const router = useRouter()
@@ -95,110 +101,113 @@ export default function Page() {
         </div>
 
         {/* Card */}
-        <div className="card-elev p-8 rounded-2xl backdrop-blur-sm">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-1">
+        <Card className="backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-xl">
               {otpSent ? "Verify OTP" : "Login"}
-            </h2>
-            <p className="text-sm text-muted-foreground">
+            </CardTitle>
+            <CardDescription>
               {otpSent ? "Enter the 4-digit code sent to your phone" : "Enter your phone number to continue"}
-            </p>
-          </div>
+            </CardDescription>
+          </CardHeader>
 
-          {!otpSent ? (
-            <>
-              <label className="block text-sm font-medium mb-2">Phone number</label>
-              <div className="flex gap-2">
-                <div className="inline-flex items-center justify-center rounded-lg border border-border bg-muted/50 px-4 text-sm font-medium min-w-[60px]">
-                  +91
+          <CardContent className="space-y-6">
+            {!otpSent ? (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone number</Label>
+                  <div className="flex gap-2">
+                    <div className="inline-flex items-center justify-center rounded-lg border border-border bg-muted/50 px-4 text-sm font-medium min-w-[60px]">
+                      +91
+                    </div>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      maxLength={10}
+                      value={phone}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, "")
+                        setPhone(val)
+                        setMessage(null)
+                      }}
+                      onKeyDown={handlePhoneKeyDown}
+                      placeholder="Enter 10-digit number"
+                      disabled={loading}
+                      className="flex-1"
+                    />
+                  </div>
                 </div>
-                <input
-                  type="tel"
-                  maxLength={10}
-                  aria-label="phone"
-                  className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[#E85A5A] focus:border-transparent transition-all"
-                  value={phone}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/[^0-9]/g, "")
-                    setPhone(val)
+                <Button 
+                  className="w-full" 
+                  onClick={sendOtp}
+                  disabled={loading || phone.length < 10}
+                  size="lg"
+                >
+                  {loading ? "Sending..." : "Send OTP"}
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="space-y-3">
+                  <Label>Enter OTP</Label>
+                  <div className="flex gap-3 justify-center">
+                    {otp.map((digit, index) => (
+                      <Input
+                        key={index}
+                        ref={(el) => { otpRefs.current[index] = el }}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={1}
+                        className="w-14 h-14 text-center text-xl font-bold"
+                        value={digit}
+                        onChange={(e) => handleOtpChange(index, e.target.value)}
+                        onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                        disabled={loading}
+                      />
+                    ))}
+                  </div>
+                </div>
+                
+                <Button 
+                  className="w-full" 
+                  onClick={() => verifyOtp()}
+                  disabled={loading || otp.some(d => !d)}
+                  size="lg"
+                >
+                  {loading ? "Verifying..." : "Verify & Continue"}
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  className="w-full"
+                  onClick={() => {
+                    setOtpSent(false)
+                    setOtp(["", "", "", ""])
                     setMessage(null)
                   }}
-                  onKeyDown={handlePhoneKeyDown}
-                  placeholder="Enter 10-digit number"
                   disabled={loading}
-                />
-              </div>
-              <button 
-                className="btn-primary mt-6 w-full py-3 text-base font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" 
-                onClick={sendOtp}
-                disabled={loading || phone.length < 10}
-              >
-                {loading ? "Sending..." : "Send OTP"}
-              </button>
-            </>
-          ) : (
-            <>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-3">Enter OTP</label>
-                <div className="flex gap-3 justify-center">
-                  {otp.map((digit, index) => (
-                    <input
-                      key={index}
-                      ref={(el) => { otpRefs.current[index] = el }}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={1}
-                      className="w-14 h-14 text-center text-xl font-bold rounded-lg border-2 border-border bg-background focus:border-[#E85A5A] focus:outline-none focus:ring-2 focus:ring-[#E85A5A]/20 transition-all"
-                      value={digit}
-                      onChange={(e) => handleOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                      disabled={loading}
-                    />
-                  ))}
-                </div>
-              </div>
-              
-              <button 
-                className="btn-primary mt-6 w-full py-3 text-base font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed" 
-                onClick={() => verifyOtp()}
-                disabled={loading || otp.some(d => !d)}
-              >
-                {loading ? "Verifying..." : "Verify & Continue"}
-              </button>
+                >
+                  ← Change phone number
+                </Button>
+              </>
+            )}
 
-              <button
-                className="w-full mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => {
-                  setOtpSent(false)
-                  setOtp(["", "", "", ""])
-                  setMessage(null)
-                }}
-                disabled={loading}
-              >
-                ← Change phone number
-              </button>
-            </>
-          )}
+            {message && (
+              <Alert variant={message.type === "success" ? "default" : "destructive"}>
+                <AlertDescription>{message.text}</AlertDescription>
+              </Alert>
+            )}
 
-          {message && (
-            <div className={`mt-4 p-3 rounded-lg text-sm ${
-              message.type === "success" 
-                ? "bg-green-500/10 text-green-600 border border-green-500/20" 
-                : "bg-red-500/10 text-red-600 border border-red-500/20"
-            }`}>
-              {message.text}
+            <div className="pt-4 border-t border-border text-center">
+              <p className="text-sm text-muted-foreground">
+                New to Ditto?{" "}
+                <a className="text-primary font-semibold hover:underline" href="/register">
+                  Create an account
+                </a>
+              </p>
             </div>
-          )}
-
-          <div className="mt-8 pt-6 border-t border-border text-center">
-            <p className="text-sm text-muted-foreground">
-              New to Ditto?{" "}
-              <a className="text-[#E85A5A] font-semibold hover:underline" href="/register">
-                Create an account
-              </a>
-            </p>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
           By continuing, you agree to our Terms & Privacy Policy

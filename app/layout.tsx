@@ -1,10 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
+import { Comfortaa } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import "./globals.css"
+
+const comfortaa = Comfortaa({
+  weight: ['300', '400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-comfortaa',
+})
 
 export const metadata: Metadata = {
   title: "Ditto - Your Beauty & Wellness Partner",
@@ -63,9 +69,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <Suspense fallback={<div>Loading...</div>}>
+    <html lang="en" className="dark" style={{ overflow: 'hidden', height: '100%' }}>
+      <body className={`${comfortaa.variable} font-sans antialiased`} style={{ overflow: 'auto', height: '100%', position: 'relative' }}>
+        <Suspense fallback={
+          <div className="min-h-screen flex items-center justify-center bg-background">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+              <p className="text-muted-foreground text-sm">Loading...</p>
+            </div>
+          </div>
+        }>
           {children}
           <Analytics />
         </Suspense>
