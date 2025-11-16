@@ -144,7 +144,7 @@
   }
 
   /* Smooth page transitions */
-  @media (prefers-reduced-motion: no-preference) {
+  /* @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;
     }
@@ -160,7 +160,7 @@
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       transition-duration: 200ms;
     }
-  }
+  } */
 }
 
 @layer components {
