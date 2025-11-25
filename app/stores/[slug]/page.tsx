@@ -21,6 +21,7 @@ export default function StoreDetail({ params }: { params: Promise<{ slug: string
   const s = stores.find((x) => x.slug === resolvedParams.slug)
   const [activeTab, setActiveTab] = useState("Offers")
   const [showAllOffers, setShowAllOffers] = useState(false)
+  const [showAllTimeOffers, setShowAllTimeOffers] = useState(false)
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
   const [count, setCount] = useState(0)
@@ -29,11 +30,50 @@ export default function StoreDetail({ params }: { params: Promise<{ slug: string
 
   const tabs = ["Offers", "Menu", "About"]
 
+  // Helper function to check if current time is within offer time range
+  const isLiveOffer = (timeRange: string) => {
+    const now = new Date()
+    const currentHour = now.getHours()
+    const currentMinute = now.getMinutes()
+    const currentTimeInMinutes = currentHour * 60 + currentMinute
+
+    // Parse time range (e.g., "10 AM - 11 AM")
+    const [start, end] = timeRange.split(' - ')
+    const parseTime = (time: string) => {
+      const [hourStr, period] = time.trim().split(' ')
+      let hour = parseInt(hourStr)
+      if (period === 'PM' && hour !== 12) hour += 12
+      if (period === 'AM' && hour === 12) hour = 0
+      return hour * 60
+    }
+
+    const startTime = parseTime(start)
+    const endTime = parseTime(end)
+    
+    return currentTimeInMinutes >= startTime && currentTimeInMinutes < endTime
+  }
+
   // Time-based offers
-  const timeOffers = [
-    { time: "12 AM - 5 PM", discount: "50%" },
-    { time: "5 PM - 9 PM", discount: "30%" },
+  const allTimeOffers = [
+    { time: "10 AM - 11 AM", discount: "50%", cashback: "10%" },
+    { time: "11 AM - 12 PM", discount: "30%" },
+    { time: "12 PM - 3 PM", discount: "40%", cashback: "10%" },
+    { time: "3 PM - 5 PM", discount: "35%" },
+    { time: "5 PM - 6 PM", discount: "45%" },
+    { time: "6 PM - 3 PM", discount: "55%", cashback: "10%" },
+    { time: "3 PM - 8 PM", discount: "25%" },
+    { time: "8 PM - 9 PM", discount: "20%" },
+    { time: "9 PM - 10 PM", discount: "35%" },
   ]
+
+  // Sort offers: live offer first, then rest
+  const timeOffers = [...allTimeOffers].sort((a, b) => {
+    const aIsLive = isLiveOffer(a.time)
+    const bIsLive = isLiveOffer(b.time)
+    if (aIsLive && !bIsLive) return -1
+    if (!aIsLive && bIsLive) return 1
+    return 0
+  })
 
   // Top items for offers section
   const topItems = [
@@ -46,6 +86,7 @@ export default function StoreDetail({ params }: { params: Promise<{ slug: string
   ]
 
   const displayedOffers = showAllOffers ? topItems : topItems.slice(0, 3)
+  const displayedTimeOffers = showAllTimeOffers ? timeOffers : timeOffers.slice(0, 3)
 
   // Gallery images
   const galleryImages = s.images.length > 0 ? s.images : [
@@ -194,19 +235,46 @@ export default function StoreDetail({ params }: { params: Promise<{ slug: string
             <div className="mb-8">
               <h2 className="text-lg font-bold mb-4">Time-Based Offers</h2>
               <div className="space-y-3">
-                {timeOffers.map((offer, index) => (
-                  <div 
-                    key={index}
-                    className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/20 transition-all cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
-                      <span className="font-medium text-sm">{offer.time}</span>
+                {displayedTimeOffers.map((offer, index) => {
+                  const isLive = isLiveOffer(offer.time)
+                  return (
+                    <div 
+                      key={index}
+                      className="relative flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/20 transition-all cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                        <div className="flex flex-col">
+                          <span className="font-medium text-sm text-foreground">{offer.time}</span>
+                          {offer.cashback && (
+                            <span className="text-xs text-green-600 font-semibold mt-0.5">+ {offer.cashback} cashback</span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        {isLive && (
+                          <div className="px-2.5 py-1 bg-primary rounded-md flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                            <span className="text-[10px] font-bold text-white uppercase tracking-wide">Live Now</span>
+                          </div>
+                        )}
+                        <span className="text-primary font-bold text-sm whitespace-nowrap">{offer.discount} OFF</span>
+                      </div>
                     </div>
-                    <span className="text-primary font-bold text-sm">{offer.discount} OFF</span>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
+              
+              {/* More Button */}
+              {!showAllTimeOffers && timeOffers.length > 3 && (
+                <button
+                  onClick={() => setShowAllTimeOffers(true)}
+                  className="w-full mt-4 py-3.5 rounded-xl border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 transition-all text-sm font-semibold text-muted-foreground hover:text-primary"
+                >
+                  + {timeOffers.length - 3} more offers
+                </button>
+              )}
             </div>
 
             {/* Top Offers */}

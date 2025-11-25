@@ -39,7 +39,8 @@ export default function Checkout({
   const availableWalletBalance = 250 // User's total wallet balance
   
   const [billAmount, setBillAmount] = useState(resolvedSearchParams.amount || "")
-  const [useWallet, setUseWallet] = useState(true)
+  const [walletInputAmount, setWalletInputAmount] = useState("")
+  const [walletMode, setWalletMode] = useState<"full" | "flat" | "percent">("full")
   const [acceptedTerms, setAcceptedTerms] = useState(false)
   
   // Get time-based discount
@@ -49,7 +50,22 @@ export default function Checkout({
   const amount = Math.max(0, Number(billAmount))
   const discountAmount = Math.floor((amount * discountPercent) / 100)
   const afterDiscount = amount - discountAmount
-  const walletAmount = useWallet ? Math.min(availableWalletBalance, afterDiscount) : 0
+  
+  // Calculate wallet amount based on mode
+  let walletAmount = 0
+  if (walletMode === "full") {
+    walletAmount = Math.min(availableWalletBalance, afterDiscount)
+  } else if (walletMode === "flat" && walletInputAmount) {
+    walletAmount = Math.min(
+      Number(walletInputAmount),
+      availableWalletBalance,
+      afterDiscount
+    )
+  } else if (walletMode === "percent" && walletInputAmount) {
+    const percentAmount = Math.floor((availableWalletBalance * Number(walletInputAmount)) / 100)
+    walletAmount = Math.min(percentAmount, availableWalletBalance, afterDiscount)
+  }
+  
   const totalToPay = Math.max(0, afterDiscount - walletAmount)
   const totalSavings = discountAmount + walletAmount
 
@@ -129,47 +145,105 @@ export default function Checkout({
         {/* Wallet Section */}
         <div className="mb-6">
           <div className="p-4 rounded-xl border-2 border-border bg-card">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-sm font-medium">Wallet Balance</div>
-                  <div className="text-lg font-bold text-purple-600 dark:text-purple-400">₹{availableWalletBalance}</div>
-                </div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
               </div>
-              <button
-                onClick={() => setUseWallet(!useWallet)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  useWallet ? "bg-purple-600" : "bg-gray-300 dark:bg-gray-600"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    useWallet ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
+              <div>
+                <div className="text-sm font-medium">Wallet Balance</div>
+                <div className="text-lg font-bold text-purple-600 dark:text-purple-400">₹{availableWalletBalance}</div>
+              </div>
             </div>
-            {useWallet && walletAmount > 0 && (
-              <div className="pt-3 border-t border-border">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Amount to be deducted</span>
-                  <span className="font-semibold text-green-600 dark:text-green-500">-₹{walletAmount}</span>
+
+            {/* Mode Selection */}
+            <div className="mb-4">
+              <div className="text-xs font-medium text-muted-foreground mb-2">Select wallet usage</div>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  onClick={() => {
+                    setWalletMode("full")
+                    setWalletInputAmount("")
+                  }}
+                  className={`py-2.5 px-3 rounded-lg font-semibold text-sm transition-all border-2 ${
+                    walletMode === "full"
+                      ? "bg-purple-600 text-white border-purple-600"
+                      : "bg-background text-foreground border-border hover:border-purple-300"
+                  }`}
+                >
+                  Full
+                </button>
+                <button
+                  onClick={() => {
+                    setWalletMode("flat")
+                    setWalletInputAmount("")
+                  }}
+                  className={`py-2.5 px-3 rounded-lg font-semibold text-sm transition-all border-2 ${
+                    walletMode === "flat"
+                      ? "bg-purple-600 text-white border-purple-600"
+                      : "bg-background text-foreground border-border hover:border-purple-300"
+                  }`}
+                >
+                  Flat (₹)
+                </button>
+                <button
+                  onClick={() => {
+                    setWalletMode("percent")
+                    setWalletInputAmount("")
+                  }}
+                  className={`py-2.5 px-3 rounded-lg font-semibold text-sm transition-all border-2 ${
+                    walletMode === "percent"
+                      ? "bg-purple-600 text-white border-purple-600"
+                      : "bg-background text-foreground border-border hover:border-purple-300"
+                  }`}
+                >
+                  % of Wallet
+                </button>
+              </div>
+            </div>
+
+            {/* Input for Flat or Percent modes */}
+            {(walletMode === "flat" || walletMode === "percent") && (
+              <div className="mb-3">
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-semibold text-muted-foreground">
+                    {walletMode === "flat" ? "₹" : "%"}
+                  </span>
+                  <input
+                    type="number"
+                    value={walletInputAmount}
+                    onChange={(e) => setWalletInputAmount(e.target.value)}
+                    placeholder={walletMode === "flat" ? "Enter amount" : "Enter %"}
+                    max={walletMode === "flat" ? availableWalletBalance : 100}
+                    className="w-full pl-9 pr-3 py-3 rounded-lg border-2 border-border bg-background text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                  />
                 </div>
-                {walletAmount === availableWalletBalance && afterDiscount > availableWalletBalance && (
-                  <div className="mt-2 text-xs text-amber-600 dark:text-amber-400">
-                    Using full wallet balance
-                  </div>
-                )}
+                <div className="mt-2 text-xs text-muted-foreground">
+                  {walletMode === "flat" 
+                    ? `Max: ₹${Math.min(availableWalletBalance, afterDiscount || 0)}`
+                    : `Enter % of your wallet (₹${availableWalletBalance})`}
+                </div>
               </div>
             )}
-            {!useWallet && (
-              <div className="pt-3 border-t border-border text-xs text-muted-foreground">
-                Toggle on to use wallet balance
+
+            {/* Wallet Deduction Display */}
+            {walletAmount > 0 && (
+              <div className="pt-3 border-t border-border">
+                <div className="flex items-center justify-between text-sm mb-1">
+                  <span className="text-muted-foreground">Wallet deduction</span>
+                  <span className="font-semibold text-green-600 dark:text-green-500">-₹{walletAmount}</span>
+                </div>
+                {walletMode === "percent" && walletInputAmount && (
+                  <div className="text-xs text-muted-foreground">
+                    {walletInputAmount}% of ₹{availableWalletBalance} = ₹{Math.floor((availableWalletBalance * Number(walletInputAmount)) / 100)}
+                  </div>
+                )}
+                {walletMode === "full" && (
+                  <div className="text-xs text-muted-foreground">
+                    Using {walletAmount === availableWalletBalance ? 'full' : 'available'} wallet balance
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -193,7 +267,7 @@ export default function Checkout({
               <span className="text-muted-foreground">Discount ({discountPercent}%)</span>
               <span className="font-medium text-green-600 dark:text-green-500">-₹{discountAmount}</span>
             </div>
-            {useWallet && walletAmount > 0 && (
+            {walletAmount > 0 && (
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Wallet</span>
                 <span className="font-medium text-green-600 dark:text-green-500">-₹{walletAmount}</span>
